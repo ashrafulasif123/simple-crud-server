@@ -12,7 +12,7 @@ app.use(express.json());
 // simpleDBUser
 // 6FLzph8cCiKYrtvw
 const uri =
-  "mongodb+srv://simpleDBUser:6FLzph8cCiKYrtvw@cluster0.mrg0zof.mongodb.net/?appName=Cluster0";
+  "mongodb+srv://simpleDBUser:iEzb0SCWK8EnQvCj@cluster0.mrg0zof.mongodb.net/?appName=Cluster0";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -29,13 +29,21 @@ app.get("/", (req, res) => {
 async function run() {
   try {
     await client.connect();
+    const userDB = client.db("usersDB");
+    const usersCollection = userDB.collection("users");
+
+    // add database related api here
+    app.post("/users", async (req, res) => {
+      const newUsers = req.body;
+      const result = await usersCollection.insertOne(newUsers);
+    });
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
   } finally {
     // Ensures that the client will close when you finish/error
-    await client.close();
+    // await client.close();
   }
 }
 run().catch(console.dir);
