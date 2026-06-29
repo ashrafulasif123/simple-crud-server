@@ -32,10 +32,16 @@ async function run() {
     const userDB = client.db("usersDB");
     const usersCollection = userDB.collection("users");
 
+    app.get("/users", async (req, res) => {
+      const cursor = usersCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    });
     // add database related api here
     app.post("/users", async (req, res) => {
       const newUsers = req.body;
       const result = await usersCollection.insertOne(newUsers);
+      res.send(result);
     });
     await client.db("admin").command({ ping: 1 });
     console.log(
