@@ -43,6 +43,11 @@ async function run() {
       const result = await usersCollection.insertOne(newUsers);
       res.send(result);
     });
+    // app delete
+    app.delete("/users/:id", (req, res) => {
+      console.log(req.params);
+      // console.log(id);
+    });
     await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
