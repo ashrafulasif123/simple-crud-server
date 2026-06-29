@@ -1,5 +1,5 @@
 const express = require("express");
-const { ServerApiVersion, MongoClient } = require("mongodb");
+const { ServerApiVersion, MongoClient, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -37,16 +37,28 @@ async function run() {
       const result = await cursor.toArray();
       res.send(result);
     });
+
+    app.get("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log("data hitted", id);
+      const query = { _id: new ObjectId(id) };
+      const findResult = await usersCollection.findOne(query);
+      res.send(findResult);
+    });
+
     // add database related api here
     app.post("/users", async (req, res) => {
       const newUsers = req.body;
       const result = await usersCollection.insertOne(newUsers);
       res.send(result);
     });
+
     // app delete
-    app.delete("/users/:id", (req, res) => {
-      console.log(req.params);
-      // console.log(id);
+    app.delete("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await usersCollection.deleteOne(query);
+      res.send(result);
     });
     await client.db("admin").command({ ping: 1 });
     console.log(
