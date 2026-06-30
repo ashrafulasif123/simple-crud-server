@@ -53,6 +53,35 @@ async function run() {
       res.send(result);
     });
 
+    app.patch("/users/:id", async (req, res) => {
+      const id = req.params.id;
+      const updatedUser = req.body;
+      console.log("to update", updatedUser);
+      const query = { _id: new ObjectId(id) };
+      const update = {
+        $set: {
+          name: updatedUser.name,
+          email: updatedUser.email,
+        },
+      };
+      const options = {};
+      const result = await usersCollection.updateOne(query, update, options);
+      res.send(result);
+    });
+    // app.patch("/users/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const { name, email } = req.body;
+    //   const query = { _id: new ObjectId(id) };
+    //   const update = {
+    //     $set: {
+    //       name,
+    //       email,
+    //     },
+    //   };
+    //   const options = {};
+    //   const result = await usersCollection.updateOne(query, update, options);
+    //   res.send(result);
+    // });
     // app delete
     app.delete("/users/:id", async (req, res) => {
       const id = req.params.id;
